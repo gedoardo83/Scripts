@@ -8,11 +8,11 @@ start_time <- Sys.time()
 
 #check arguments and set default output if not provided
 args = commandArgs(trailingOnly=TRUE)
-if (length(args)<2) {
-  stop("At least two arguments must be supplied (association file, bim file).n", call.=FALSE)
-} else if (length(args)==1) {
+if (length(args)<3) {
+  stop("At least 3 arguments must be supplied (association file, bim file, info files directory).n", call.=FALSE)
+} else if (length(args)==3) {
   # default output file
-  args[3] = paste0(args[1],".META")
+  args[4] = paste0(args[1],".META")
 }
 
 #Read association table and bim file
