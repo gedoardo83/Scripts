@@ -40,9 +40,10 @@ bim <- merge(bim, info.data, by.x="ID", by.y="SNP", all.x=T)
 bim <- bim[match(assoc$SNP, bim$V2),]
 
 #Create and save META input file
-message(paste0("generating meta input file to ", args[4],"\n"))
+message("generating meta input file...")
 meta.file <- data.frame(chr=assoc$CHR, rsid=assoc$SNP, pos=assoc$BP, allele_A=bim$V6, allele_B=assoc$A1, P_value=assoc$P, info=bim$Rsq, beta=assoc$BETA, se=assoc$SE)
-write.table(meta.file, args[3], row.names=F, quote=F)
+message(paste0("save file to ", args[4]))
+write.table(meta.file, args[4], row.names=F, quote=F)
 
 end_time <- Sys.time()
 elapsed_time <- end_time - start_time
