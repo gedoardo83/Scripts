@@ -22,32 +22,25 @@ assoc <- assoc[assoc$TEST == "ADD",] #remove eventual covariates test lines
 message("loading bim file...")
 bim <- read.table(args[2], as.is=T)
 bim$ID <- paste0(bim$V1,":",bim$V4)
-bim$INFO <- 0
-bim$V1 <- paste0("chr",bim$V1)
 
 #Read info files bychr
 files <- dir(args[3], pattern=".filt")
-info.data <- list()
+myfile <- paste0(args[3], files[1])
+info.data <- read.table(myfile, header=T, as.is=T) 
 for (f in files) {
   message(paste0("load info file: ",f))
   chr.id <- gsub("\\.info\\.filt", "", f)
   myfile <- paste0(args[3], f) 
-  info.data[[chr.id]] <- read.table(myfile, header=T, as.is=T)                            
+  info.data <- rbind(info.data,read.table(myfile, header=T, as.is=T))                            
 }
 
 #Retrieve Rsq value for each SNP in bim file
 message("annotating rsq information...")
-pb <- txtProgressBar(min=1, max=nrow(bim), initial=0)
-
-for (n in 1:nrow(bim)) {
-  setTxtProgressBar(pb, n)
-  bim$INFO[n] <- info.data[[bim$V1[n]]][info.data[[bim$V1[n]]]$SNP == bim$ID[n],2]
-}
-close(pb)
+bim <- merge(bim, info.data, by.x="ID", by.y="SNP", all.x=T)
 
 #Create and save META input file
-message(paste0("save meta input file to ", args[3],"\n"))
-meta.file <- data.frame(chr=assoc$CHR, rsid=assoc$SNP, pos=assoc$BP, allele_A=bim$V6, allele_B=assoc$A1, P_value=assoc$P, info=bim$INFO, beta=assoc$BETA, se=assoc$SE)
+message(paste0("save meta input file to ", args[4],"\n"))
+meta.file <- data.frame(chr=assoc$CHR, rsid=assoc$SNP, pos=assoc$BP, allele_A=bim$V6, allele_B=assoc$A1, P_value=assoc$P, info=bim$Rsq, beta=assoc$BETA, se=assoc$SE)
 write.table(meta.file, args[3], row.names=F, quote=F)
 
 end_time <- Sys.time()
