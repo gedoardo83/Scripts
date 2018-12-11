@@ -15,6 +15,13 @@ if (length(args)<3) {
   args[4] = paste0(args[1],".META")
 }
 
+#Print arguments
+message("Arguents as interpreted:")
+message(paste0("\tinput assoc: ",args[1]))
+message(paste0("\tinput bim: ",args[2]))
+message(paste0("\tinput info_dir: ",args[3]))
+message(paste0("\toutput file: ",args[4]))
+
 #Read association table and bim file
 message("loading association results...")
 assoc <- read.table(args[1], header=T, as.is=T)
@@ -48,4 +55,4 @@ write.table(meta.file, args[4], row.names=F, quote=F)
 end_time <- Sys.time()
 elapsed_time <- end_time - start_time
 
-message(paste0("All done! Elapsed time: ",elapsed_time,"\n")
+message(paste0("All done! Elapsed time: ",elapsed_time,"\n"))
