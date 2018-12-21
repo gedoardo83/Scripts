@@ -13,6 +13,7 @@ open(IN, $frqfile);
     chomp($row);
     @line = split("\t", $row);
     $snps{$line[1]} = join(" ", @line[2..4]);
+    $maf{$line[1]} = $line[4];
   }
 close(IN);
 
@@ -23,6 +24,9 @@ $header = <IN>; #skip header line
   while($row=<IN>) {
     chomp($row);
     @line = split("\t", $row);
+    for ($n=6; $n<=$#line; $n++) {
+      if ($line[$n] eq "NA") {$line[$n] = 2*$maf{$line[1]}}; # Impute missing data as 2*MAF
+    }
     print OUT "$line[0] $line[1] $line[3] $snps{$line[1]} ".join(" ", @line[6..$#line])."\n";
   }
 close(IN);
