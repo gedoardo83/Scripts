@@ -29,6 +29,9 @@ $header=<IN>;
 chomp($header);
 @line = split("\t", $header);
 print OUT join("\n", @line[6..$#line]);
+close(IN);
+close(OUT);
+system("sed -i 's/_/ /g' samples.txt");
 
 #Clean temp files
 system("rm TEMP.*");
