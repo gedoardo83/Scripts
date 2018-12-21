@@ -12,7 +12,7 @@ open(IN, $frqfile);
   while($row=<IN>) {
     chomp($row);
     @line = split("\t", $row);
-    $snps{$line[1]} = join("\t", @line[2..4]);
+    $snps{$line[1]} = join(" ", @line[2..4]);
   }
 close(IN);
 
