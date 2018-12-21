@@ -1,6 +1,8 @@
+#Take plink bed/bim/fam dataset and use plink and create_dosage.pl to generate predixcan input files
+
 $inputfile = $ARGV[0]; #Prefix of input plink bim/bed/fam dataset
 $plink = "/data0/opt/plink-1.9/plink"; #plink program
-$dosagescript = "/data0/ourtools/create_dosage.pl";
+$dosagescript = "/data0/ourtools/create_dosage.pl"; #create_dosage.pl location
 
 #run plink to calculate MAF for all SNPs, split by chr
 system("cut -f1 $inputfile.bim | sort -u | xargs -P25 -I input -d'\n' sh -c '$plink --bfile $inputfile --freq --allow-no-sex --chr input --out TEMP.chrinput'");
@@ -9,7 +11,8 @@ system("cut -f1 $inputfile.bim | sort -u | xargs -P25 -I input -d'\n' sh -c '$pl
 system("cut -f1 $inputfile.bim | sort -u | xargs -P25 -I input -d'\n' sh -c '$plink --bfile $inputfile --allow-no-sex --recode A-transpose --chr input --out TEMP.chrinput'");
 
 #make .frq file tab delimited
-$cmd = "ls *.frq | xargs -P25 -I input -d'\\n' sh -c 'cat input | tr -s \"\\t\" \"\\n\" | sed \"s/^\\t//g\" > input.tab'";
+$cmd = "ls *.frq | xargs -P25 -I input -d'\\n' sh -c 'cat input | tr -s \" \" \"\\t\" | sed \"s/^\\t//g\" > input.tab'";
+print "$cmd\n";
 system($cmd);
 
 #Run create_dosage.pl to create predixcan dosage files
