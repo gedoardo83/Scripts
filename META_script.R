@@ -34,7 +34,7 @@ bim$ID <- paste0(bim$V1,":",bim$V4)
 files <- dir(args[3], pattern=".filt")
 myfile <- paste0(args[3], files[1])
 info.data <- read.table(myfile, header=T, as.is=T) 
-for (f in files) {
+for (f in files[-1]) {
   message(paste0("load info file: ",f))
   chr.id <- gsub("\\.info\\.filt", "", f)
   myfile <- paste0(args[3], f) 
