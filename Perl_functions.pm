@@ -14,11 +14,13 @@ sub read_VCF {
 		}
 		@line = split("\t", $row);
 		
+		$varid = $line[0]."_".$line[1]."_".$line[3]."_".$line[4];
+		
 		#read info tags and their values and store in infos hash
 		@infotags = split(";", $line[7]);
 		foreach (@infotags) {
 			$_ =~ /(.+)=(.+)/;
-			$infos{$1}=$2;
+			$infos{$varid}{$1}=$2;
 		}
 
 		#read format tags and values for each sample and store in gtinfo hash
@@ -27,7 +29,7 @@ sub read_VCF {
 		foreach $mysample(@samplesid) {
 			@column=split(":", $line[$i]);
 			for ($n=0; $n<=$#format; $n++) {
-		    	$gtinfo{$mysample}{$format[$n]}=$column[$n];
+		    	$gtinfo{$varid}{$mysample}{$format[$n]}=$column[$n];
 			}
 		$i++;
 		}
